@@ -183,7 +183,9 @@ func orderScan(img string, c config) (string, error) {
 	if err != nil {
 		return "", errors.Wrapf(err, "while unmarshalling to struct, dumping error as string: %s", string(bodyBytes))
 	}
-
+	if report.Meta.Code != http.StatusOK {
+		return string(bodyBytes), nil
+	}
 	return report.Results.ReportURL, nil
 }
 
@@ -224,6 +226,10 @@ func uploadDockerImage(buf *bytes.Reader, rawName string, c config) (string, err
 	err = json.Unmarshal(bodyBytes, &report)
 	if err != nil {
 		return "", errors.Wrap(err, "while unmarshalling to struct")
+	}
+
+	if report.Meta.Code != http.StatusOK {
+		return string(bodyBytes), nil
 	}
 
 	return report.Results.ReportURL, nil
