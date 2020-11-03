@@ -193,7 +193,7 @@ func formatImageName(s string) string {
 
 func uploadDockerImage(buf *bytes.Reader, rawName string, c config) (string, error) {
 	u, err := url.Parse(c.ApiEndpoint)
-	u.Path = path.Join(u.Path, fmt.Sprintf("api/upload/%s", formatImageName(rawName)))
+	u.Path = path.Join(u.Path, "api/upload", formatImageName(rawName))
 	req, err := http.NewRequest(http.MethodPut, u.String()+"/" /* path.Join removes that one last / */, buf)
 	if err != nil {
 		return "", errors.Wrap(err, "while creating request")
