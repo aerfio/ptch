@@ -156,7 +156,7 @@ func orderScan(img string, c config) (string, error) {
 	u, err := url.Parse(c.ApiEndpoint)
 	u.Path = path.Join(u.Path, "api/fetch/")
 
-	req, err := http.NewRequest(http.MethodPost, u.String()+"/", nil)
+	req, err := http.NewRequest(http.MethodPost, u.String()+"/" /* path.Join removes that one last / */, nil)
 	if err != nil {
 		return "", errors.Wrap(err, "while creating request")
 	}
@@ -194,7 +194,7 @@ func formatImageName(s string) string {
 func uploadDockerImage(buf *bytes.Reader, rawName string, c config) (string, error) {
 	u, err := url.Parse(c.ApiEndpoint)
 	u.Path = path.Join(u.Path, fmt.Sprintf("api/upload/%s", formatImageName(rawName)))
-	req, err := http.NewRequest(http.MethodPut, u.String()+"/", buf)
+	req, err := http.NewRequest(http.MethodPut, u.String()+"/" /* path.Join removes that one last / */, buf)
 	if err != nil {
 		return "", errors.Wrap(err, "while creating request")
 	}
