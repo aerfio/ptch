@@ -154,6 +154,9 @@ type Response struct {
 
 func orderScan(img string, c config) (string, error) {
 	u, err := url.Parse(c.ApiEndpoint)
+	if err != nil {
+		return "", errors.Wrap(err, "while parsing apiEndpoint url")
+	}
 	u.Path = path.Join(u.Path, "api/fetch/")
 
 	req, err := http.NewRequest(http.MethodPost, u.String()+"/" /* path.Join removes that one last / */, nil)
@@ -193,6 +196,9 @@ func formatImageName(s string) string {
 
 func uploadDockerImage(buf *bytes.Reader, rawName string, c config) (string, error) {
 	u, err := url.Parse(c.ApiEndpoint)
+	if err != nil {
+		return "", errors.Wrap(err, "while parsing apiEndpoint url")
+	}
 	u.Path = path.Join(u.Path, "api/upload", formatImageName(rawName))
 	req, err := http.NewRequest(http.MethodPut, u.String()+"/" /* path.Join removes that one last / */, buf)
 	if err != nil {
